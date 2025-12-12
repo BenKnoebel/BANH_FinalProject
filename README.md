@@ -1,21 +1,22 @@
-# Structure from Motion Pipeline
+# ES 143: Structure from Motion Pipeline
 
-A complete implementation of a Structure from Motion (SfM) pipeline using OpenCV and Plotly.
+This is the GitHub for the final project of Class ES 143
+Team members: Ahmed Hasan Baky, Benjamin Knoebel del Olmo, Neha Sajja and Harry Price
 
 ## Overview
 
-This project reconstructs 3D scene geometry from a sequence of 5 images captured from different viewpoints using a calibrated smartphone camera.
+This project reconstructs 3D scene geometry from a sequence of at least 5 images captured from different viewpoints using a calibrated smartphone camera.
 
 ## Usage
 
 ### Basic Usage
 
 There are four options to choose from:
-1. playroom (given Example Data)
+1. Playroom (given Example Data)
 2. SEC_2  (Two videos recorded in the SEC, the numbering serves as a reminder of SEC_1, the fallen brother whos calibration failed)
 3. SEC_3
 4. Ahmeds_Room (curtesy of Ahmed)
-5. castle (our external test Dataset from openMVG, https://github.com/openMVG/SfM_quality_evaluation/tree/master)
+5. Castle (our external test Dataset from openMVG, https://github.com/openMVG/SfM_quality_evaluation/tree/master)
 
 
 ## Running the Pipeline
