@@ -6,39 +6,6 @@ A complete implementation of a Structure from Motion (SfM) pipeline using OpenCV
 
 This project reconstructs 3D scene geometry from a sequence of 5 images captured from different viewpoints using a calibrated smartphone camera.
 
-## Pipeline Steps
-
-### 1. Keypoint Detection and Matching
-- **Algorithm**: SIFT (Scale-Invariant Feature Transform)
-- **Matching**: FLANN-based matcher with Lowe's ratio test (0.7 threshold)
-- **Robustness**: Filters matches to ensure high-quality correspondences
-
-### 2. Base Scene Reconstruction (First Two Views)
-- **Essential Matrix Estimation**: Uses RANSAC for robust estimation
-- **Pose Extraction**: Decomposes essential matrix to get rotation (R) and translation (t)
-- **Triangulation**: Computes 3D points from matched keypoints using `cv2.triangulatePoints()`
-- **Filtering**: Removes points behind either camera (cheirality check)
-
-### 3. Incremental View Addition (Views 3-5) - PnP-Based Registration
-- **2D-3D Correspondence Finding**: Matches new view with previous views and identifies which 2D points correspond to existing 3D points
-- **PnP Pose Estimation**: Uses `cv2.solvePnPRansac()` to estimate camera pose from 2D-3D correspondences
-- **Point Tracking**: Maintains observations of each 3D point across multiple views
-- **New Point Triangulation**: After camera registration, triangulates new 3D points from unmatched features
-- **Robust Registration**: Achieves 95-97% PnP inlier rates, ensuring accurate camera placement
-
-### 4. Interactive 3D Visualization
-- **Point Cloud**: All triangulated 3D points colored by depth
-- **Camera Positions**: Red diamond markers showing camera locations
-- **Camera Frames**: RGB axes showing camera orientations
-  - Red: X-axis (right)
-  - Green: Y-axis (down)
-  - Blue: Z-axis (optical axis/forward)
-- **Interactivity**: Rotate, zoom, pan using Plotly controls
-- **Automatic Scaling**: Scene bounds automatically adjusted to point cloud extent
-- **Outlier Filtering**: Removes distant outliers that would compress the main scene
-- **Aspect Ratio**: Uses cube aspect mode for equal scaling on all axes
-
-
 ## Usage
 
 ### Basic Usage
@@ -63,14 +30,15 @@ python main.py
 python main.py Playroom_lowres    
 python main.py Ahmeds_Room        
 python main.py SEC_2              
-python main.py SEC_3              
+python main.py SEC_3
+python main.py castle              
 ```
 
 ### With Custom Implementation
 ```bash
-python main.py Playroom_lowres true   # Uses custom RANSAC/8-point
+python main.py Playroom_lowres true   # Uses extension Fundamental Matrix Estimation
 ```
-
+The true will make the pipeline use our own fundamental matrix estimation, which is sadly quite error-prone.  
 
 The script will:
 1. Load images from the specified dataset folder
@@ -80,6 +48,38 @@ The script will:
 5. Open an interactive 3D visualization in your browser
 6. Compute reprojection errors and generate evaluation report
 7. Save evaluation plots and statistics
+
+
+
+## Pipeline Steps
+
+### 1. Keypoint Detection and Matching
+- **Algorithm**: SIFT (Scale-Invariant Feature Transform)
+- **Matching**: FLANN-based matcher 
+
+### 2. Base Scene Reconstruction (First Two Views)
+- **Essential Matrix Estimation**: Uses RANSAC for robust estimation
+- **Pose Extraction**: Decomposes essential matrix to get rotation (R) and translation (t)
+- **Triangulation**: Computes 3D points from matched keypoints using `cv2.triangulatePoints()`
+- **Filtering**: Removes points behind either camera (cheirality check)
+
+### 3. Incremental View Addition (Views 3-5) - PnP-Based Registration
+- **2D-3D Correspondence Finding**: Matches new view with previous views and identifies which 2D points correspond to existing 3D points
+- **PnP Pose Estimation**: Uses `cv2.solvePnPRansac()` to estimate camera pose from 2D-3D correspondences
+- **Point Tracking**: Maintains observations of each 3D point across multiple views
+- **New Point Triangulation**: After camera registration, triangulates new 3D points from unmatched features
+
+### 4. Interactive 3D Visualization
+- **Point Cloud**: All triangulated 3D points colored by depth
+- **Camera Positions**: Red diamond markers showing camera locations
+- **Camera Frames**: RGB axes showing camera orientations
+  - Red: X-axis (right)
+  - Green: Y-axis (down)
+  - Blue: Z-axis (optical axis/forward)
+- **Interactivity**: Rotate, zoom, pan using Plotly controls
+- **Automatic Scaling**: Scene bounds automatically adjusted to point cloud extent
+- **Outlier Filtering**: Removes distant outliers that would compress the main scene
+- **Aspect Ratio**: Uses cube aspect mode for equal scaling on all axes
 
 
 ## Reconstruction Quality Evaluation
